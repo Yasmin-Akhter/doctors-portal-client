@@ -1,0 +1,9 @@
+/* .serviceCard {
+    height: 310px;
+    width: 440px;
+} */
+
+.serviceCard img {
+    height: 115px;
+    /* width: 100px; */
+}
