@@ -10,6 +10,8 @@ import Login from './Pages/Login/Login';
 import SignUp from './Pages/Login/SignUp';
 import RequireAuth from './Pages/RequireAuth';
 import PasswordReset from './Pages/Login/PasswordReset';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -30,7 +32,7 @@ function App() {
         <Route path='/password-reset' element={<PasswordReset></PasswordReset>}></Route>
       </Routes>
 
-
+      <ToastContainer />
     </div>
   );
 }

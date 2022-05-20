@@ -1,31 +1,52 @@
 import { format } from 'date-fns';
 import React from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import auth from '../../firebase.init';
+import { toast } from 'react-toastify';
 
 const BookingModal = ({ treatment, date, setTreatment }) => {
     const { _id, name, slots } = treatment;
-    console.log(slots);
+    const [user, loading, error] = useAuthState(auth);
+
+    const formattedDate = format(date, 'PP');
 
     const handleModal = e => {
         e.preventDefault();
-        const date = e.target.date.value;
         const slot = e.target.slot.value;
-        const name = e.target.name.value;
-        const email = e.target.email.value;
-        const phone = e.target.phone.value;
-        const bookings = { date, slot, name, email, phone }
-        console.log(date, slot, name, email, phone);
-        setTreatment(null);
+        const booking = {
+            treatmentId: _id,
+            treatmentName: name,
+            date: formattedDate,
+            slot,
+            patient: user.email,
+            patientName: user.displayName,
+            phone: e.target.phone.value
+        }
+        //to close the modal
 
-        fetch('http://localhost:5000/treatment', {
+
+        fetch('http://localhost:5000/booking', {
             method: 'POST', // or 'PUT'
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(bookings),
+            body: JSON.stringify(booking),
         })
             .then(response => response.json())
             .then(data => {
                 console.log('Success:', data);
+                if (data.success) {
+                    toast(`Appointment set on ${formattedDate} ${slot}`);
+
+
+                }
+                else {
+                    toast.error(`Already have an appointment on ${formattedDate} ${slot}`);
+
+
+                }
+
+                setTreatment(null);
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -50,14 +71,12 @@ const BookingModal = ({ treatment, date, setTreatment }) => {
 
 
                         </select>
-                        <input type="text" name='name' placeholder="Name" className="input input-bordered w-full max-w-xs" />
-                        <input type="text" name='email' placeholder="Email" className="input input-bordered w-full max-w-xs" />
+                        <input type="text" name='name' disabled value={user?.displayName || ''} className="input input-bordered w-full max-w-xs" />
+                        <input type="email" name='email' disabled value={user?.email || ''} className="input input-bordered w-full max-w-xs" />
                         <input type="text" name='phone' placeholder="Phone Number" className="input input-bordered w-full max-w-xs" />
                         <input type="submit" value="Submit" className="btn btn-secondary w-full max-w-xs" />
                     </form>
-                    <div className="modal-action">
-                        <label htmlFor="booking-modal" className="btn">Yay!</label>
-                    </div>
+
                 </div>
             </div>
         </div>
