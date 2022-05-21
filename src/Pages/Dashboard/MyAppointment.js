@@ -28,7 +28,36 @@ const MyAppointment = () => {
     )
     return (
         <div>
-            <h1>My appointment:{appointments.length}</h1>
+            <h1 className='my-5 text-purple-700'>{user.email}</h1>
+
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+
+                    <thead>
+                        <tr>
+
+                            <th>Treatment</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            appointments.map(appointment =>
+                                <tr>
+                                    <th>{appointment.treatmentName}</th>
+                                    <td>{appointment.date}</td>
+                                    <td>{appointment.slot}</td>
+
+                                </tr>
+                            )
+                        }
+
+
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };
